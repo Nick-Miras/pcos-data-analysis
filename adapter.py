@@ -85,7 +85,7 @@ class LocalDatasetAdapter(DatasetAdapter):
         filtered_dataframe = dataframe[[feature for feature in features.__dict__.values() if feature]]
 
         # Transform the 'Gravida' column to a binary feature for infertility based on whether the patient has been pregnant or not.
-        filtered_dataframe[features.infertility] = filtered_dataframe[features.infertility].apply(lambda x: 1 if x == 'G1P0' else 0)
+        filtered_dataframe[features.infertility] = filtered_dataframe[features.infertility].apply(lambda x: 1 if x == 'G1P0' or x == 'G3P2' else 0)
         # Transform the 'Menstrual Irregularities' column to a binary feature for menstrual irregularity.
         filtered_dataframe[features.menstrual_irregularity] = filtered_dataframe[features.menstrual_irregularity].apply(lambda x: 1 if x == "Irregular" else 0)
         # Transform the 'Ultrasound Findings' column to a binary feature for PCOS diagnosis.
@@ -93,7 +93,9 @@ class LocalDatasetAdapter(DatasetAdapter):
         # obtain other data features from the 'Symptoms' column.
         filtered_dataframe["acne"] = dataframe["Symptoms"].apply(lambda x: 1 if isinstance(x, str) and ("acne" in x.lower() or "pimples" in x.lower()) else 0)
         filtered_dataframe["hirsutism"] = dataframe["Symptoms"].apply(lambda x: 1 if isinstance(x, str) and ("hirsutism" in x.lower() or "hair growth" in x.lower()) else 0) 
-
+        filtered_dataframe["irregular_masses"] = dataframe["Symptoms"].apply(lambda x: 1 if isinstance(x, str) and ("irregular masses" in x.lower()) else 0) 
+        # filtered_dataframe["weight_gain"] = dataframe["Symptoms"].apply(lambda x: 1 if isinstance(x, str) and ("weight gain" in x.lower()) else 0) 
+        
         return self.replace_columns(filtered_dataframe)  # TODO: Implement the conversion logic.
 
 
